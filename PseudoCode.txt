@@ -83,3 +83,4 @@ WHILE TRUE
         OUTPUT "3) Display Scoreboard"
         OUTPUT "4) Exit Program"
     ENDIF
+END
