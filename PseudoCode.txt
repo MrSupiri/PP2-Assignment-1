@@ -1,53 +1,85 @@
 BEGIN
 SET Map<String, Integer> scores
-OUTPUT Welcome to Springfield Golf Club.
-OUTPUT Select Option:
-OUTPUT 	1) Enter Scores
-OUTPUT	2) Find Golfer
-OUTPUT	3) Display Scoreboard
-OUTPUT	4) Exit Program
+
+OUTPUT "Welcome to Springfield Golf Club."
+OUTPUT "Select Option:"
+OUTPUT "1) Enter Scores"
+OUTPUT "2) Find Golfer"
+OUTPUT "3) Display Scoreboard"
+OUTPUT "4) Exit Program"
+
 WHILE TRUE
-    OUTPUT >
+    OUTPUT "">""
     INPUT input
+
     IF input is not a integer
-        OUTPUT ERROR 406: Invalid Input
-        OUTPUT Select *Only* one of these Option:
-        OUTPUT 1) Enter Scores
-        OUTPUT 2) Find Golfer
-        OUTPUT 3) Display Scoreboard
-        OUTPUT 4) Exit Program
+        OUTPUT "ERROR 406: Invalid Input"
+        OUTPUT "Select *Only* one of these Option:"
+        OUTPUT "1) Enter Scores"
+        OUTPUT "2) Find Golfer"
+        OUTPUT "3) Display Scoreboard"
+        OUTPUT "4) Exit Program"
         CONTINUE
+    ENDIF
+
     IF input == 1
-        OUTPUT Name:
-        INPUT name
-        IF name in scores MAP
-            OUTPUT {name} already exist, Enter -1 for score if you don't want to override the current value
-        OUTPUT Result:
-        INPUT score
-        IF score is a integer
-            IF score >= 18 AND score <= 108
-                INSERT score to scores MAP
-                CONTINUE
-            ELSE IF score == -1
-                continue
-        OUTPUT ERROR 400: Invalid Result, Make sure your result is between 18 and 108
+        OUTPUT "How many golfers in the group:"
+        INPUT n_golfers
+
+        SET i = 0
+
+        IF n_golfers is a integer
+            OUTPUT "ERROR 406: Invalid Input"
+            OUTPUT "Select *Only* one of these Option:"
+            OUTPUT "1) Enter Scores"
+            OUTPUT "2) Find Golfer"
+            OUTPUT "3) Display Scoreboard"
+            OUTPUT "4) Exit Program"
+            CONTINUE
+        ENDIF
+
+        WHILE i < n_golfers
+            OUTPUT "Name:"
+            INPUT name
+            IF name in scores MAP
+                OUTPUT ""{name} already exist, Enter -1 for score if you don't want to override the current value"
+
+            OUTPUT "Result:"
+            INPUT score
+
+            IF score is a integer
+                IF score >= 18 AND score <= 108
+                    INSERT score to scores MAP
+                    CONTINUE
+                ELSE IF score == -1
+                    continue
+                ENDIF
+            OUTPUT "ERROR 400: Invalid Result, Make sure your result is between 18 and 108"
+        ENDWHILE
+
     ELSE IF input == 2
-        OUTPUT Name:
+        OUTPUT "Name:"
         INPUT name
         IF name in scores MAP
-            OUTPUT {name} - {value in the MAP for the name}
+            OUTPUT ""{name} - {value in the MAP for the name}""
         ELSE
-            OUTPUT ERROR 404: Player not found
+            OUTPUT "ERROR 404: Player not found"
+        ENDIF
+
     ELSE IF input == 3
         SORT the scores MAP by the values
         FOR score in scores MAP
-            OUTPUT {score.key} - {score.value}
+            OUTPUT ""{score.key} - {score.value}""
+        ENDFOR
+
     ELSE IF input == 4
         BREAK
+
     ELSE
-        OUTPUT ERROR 406: Invalid Input
-        OUTPUT Select *Only* one of these Option:
-        OUTPUT 1) Enter Scores
-        OUTPUT 2) Find Golfer
-        OUTPUT 3) Display Scoreboard
-        OUTPUT 4) Exit Program
+        OUTPUT "ERROR 406: Invalid Input"
+        OUTPUT "Select *Only* one of these Option:"
+        OUTPUT "1) Enter Scores"
+        OUTPUT "2) Find Golfer"
+        OUTPUT "3) Display Scoreboard"
+        OUTPUT "4) Exit Program"
+    ENDIF
