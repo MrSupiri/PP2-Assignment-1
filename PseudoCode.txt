@@ -9,7 +9,7 @@ OUTPUT "3) Display Scoreboard"
 OUTPUT "4) Exit Program"
 
 WHILE TRUE
-    OUTPUT "">""
+    OUTPUT >"
     INPUT input
 
     IF input is not a integer
