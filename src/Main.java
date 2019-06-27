@@ -15,28 +15,26 @@ public class Main {
         System.out.println("\t4) Exit Program");
 
         // Prevent User from entering a Letter
-        System.out.print("$ ");
+        System.out.print("> ");
         while (!sc.hasNextInt()){
             invalidInputError(sc);
-            sc.nextLine();
+            System.out.print("> ");
+            sc.next();
         }
         int option = sc.nextInt();
-
+        sc.nextLine();
 
         while(option != 4) {
             switch (option){
                 case 1:
                     System.out.print("How many golfers in the group: ");
 
-                    int n_golfers;
-
-                    if(sc.hasNextInt()) {
-                        n_golfers = sc.nextInt();
+                    while (!sc.hasNextInt()){
+                        System.out.println("\nERROR 406: Invalid Input");
+                        sc.nextLine();
+                        System.out.print("How many golfers in the group: ");
                     }
-                    else{
-                        invalidInputError(sc);
-                        continue;
-                    }
+                    int n_golfers = sc.nextInt();
 
                     for (int i = 0; i < n_golfers; i++) {
                         System.out.println("\nGOLFER "+ (i+1));
@@ -53,6 +51,7 @@ public class Main {
 
                         System.out.print("Result: ");
 
+
                         // Prevent User from entering a Letter
                         if (sc.hasNextInt()) {
                             int score = sc.nextInt();
@@ -65,13 +64,11 @@ public class Main {
                                 i--;
                                 continue;
                             }
-
-                            // This line only comes if the score is not in range
-                            System.out.println("\nERROR 400: Invalid Result,\n\tMake sure your result is between 18 and 108, Enter Again !\n");
-                            i--;
-                        } else {
-                            invalidInputError(sc);
                         }
+
+                        // This line only comes if the score is not in range or score is not int
+                        System.out.println("\nERROR 400: Invalid Result,\n\tMake sure your result is between 18 and 108, Enter Again !\n");
+                        i--;
                     }
                     break;
 
@@ -103,17 +100,16 @@ public class Main {
 
 
                 default:
-
-                    invalidInputError(sc);
-                    continue;
+                    invalidInputError();
             }
 
 
-            System.out.print("$ ");
+            System.out.print("> ");
 
-            if(!sc.hasNextInt()){
+            while (!sc.hasNextInt()){
                 invalidInputError(sc);
-                continue;
+                System.out.print("> ");
+                sc.next();
             }
             option = sc.nextInt();
             sc.nextLine();
@@ -130,13 +126,24 @@ public class Main {
         System.out.println("\t4) Exit Program \n");
         // Reset the Standard In Reader
         sc.nextLine();
-
     }
 
+    // Overloaded Version of invalidInputError
+    private static void invalidInputError(){
+        System.out.println("\nERROR 406: Invalid Input");
+        System.out.println("Select *Only* one of these Option:");
+        System.out.println("\t1) Enter Scores");
+        System.out.println("\t2) Find Golfer");
+        System.out.println("\t3) Display Scoreboard");
+        System.out.println("\t4) Exit Program \n");
+    }
+
+    // Setter for Score HashMap
     private static void setScores(String name, int score){
         scores.put(name, score);
     }
 
+    // Getter for Score HashMap
     private static Integer getScores(String name){
         return scores.get(name);
     }
