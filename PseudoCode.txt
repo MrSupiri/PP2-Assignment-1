@@ -1,6 +1,6 @@
 BEGIN
 SET Map<String, Integer> scores
-SET repeatEntry = false
+DO
 
 OUTPUT "Welcome to Springfield Golf Club."
 OUTPUT "Select Option:"
@@ -10,6 +10,7 @@ OUTPUT "3) Display Scoreboard"
 OUTPUT "4) Exit Program"
 OUTPUT ">"
 INPUT option
+
 
 WHILE option != 4:
 
