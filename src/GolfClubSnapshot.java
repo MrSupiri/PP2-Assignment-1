@@ -2,6 +2,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.time.LocalDateTime;
 
+/**
+ * This object is used to get the snapshot of the current state and store it
+ * so we could restore it if need later
+ */
 // Note - All the Classes, variables and methods are on package level private
 class GolfClubSnapshot {
     private Map<String, Integer> scores = new HashMap<>();

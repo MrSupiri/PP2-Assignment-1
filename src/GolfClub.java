@@ -1,15 +1,19 @@
-// Name - Isala Piyarisi
-// IIT ID - 2018421
-// UOW ID - w1742118
-
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Name - Isala Piyarisi
+ * IIT ID - 2018421
+ * UOW ID - w1742118
+ */
 public class GolfClub {
     private static Map<String, Integer> scores = new HashMap<>();
     private static Map<String, Integer> scoresArchive = new HashMap<>();
+    private static Map<String, Integer> lastScores = new HashMap<>();
+    private static Map<String, Integer> lastScoresArchive = new HashMap<>();
+    private static boolean restoredSnapshot = false;
     private static Scanner sc = new Scanner(System.in);
-    private static GolfClubSnapshot lastState;
+//    private static GolfClubSnapshot lastState;
 
     public static void main(String[] args) {
         System.out.println("Welcome to Springfield Golf Club.");
@@ -86,6 +90,10 @@ public class GolfClub {
         System.out.println("\t7) Exit Program\n");
     }
 
+    /**
+     * Get Player's name and scores and store in a temporary  HashMap
+     * and finally add all the collected data to the Main HashMap
+     */
     private static void enterScore() {
         Map<String, Integer> newScores = new HashMap<>();
         System.out.print("How many golfers in the group: ");
@@ -121,6 +129,10 @@ public class GolfClub {
         setMultipleScores(newScores);
     }
 
+    /**
+     * Recursive function to validate both inputted value is string and it's the defined range
+     * @return - inputted score of the player
+     */
     private static int getScoreFromUser(){
         System.out.print("Result: ");
         while (!sc.hasNextInt()) {
@@ -136,6 +148,9 @@ public class GolfClub {
         return score;
     }
 
+    /**
+     * Find player from the data structure
+     */
     private static void findGolfer() {
         System.out.print("Name: ");
         String name = sc.nextLine();
@@ -147,6 +162,9 @@ public class GolfClub {
         }
     }
 
+    /**
+     * Remove a player from data structure
+     */
     private static void removeGolfer() {
         System.out.print("Name: ");
         String name = sc.nextLine();
@@ -160,6 +178,9 @@ public class GolfClub {
         }
     }
 
+    /**
+     * Restore accidentally deleted player
+     */
     private static void restoreGolfer() {
         System.out.print("Name: ");
         String name = sc.nextLine();
@@ -173,8 +194,11 @@ public class GolfClub {
         }
     }
 
+    /**
+     * Sort the scores hash map in the ascending order and print it one by one
+     */
     private static void displayScoreboard() {
-        // Sorting Method Taken from http://lewandowski.io/2014/04/java8-map/
+        // Sorting Method was inspired from http://lewandowski.io/2014/04/java8-map/
         for (Map.Entry<String, Integer> score : scores.entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue())
@@ -183,61 +207,117 @@ public class GolfClub {
         }
     }
 
+    /**
+     * Restore the last state to current state
+     */
     private static void restoreLastState(){
-        GolfClubSnapshot currentState;
+        Map<String, Integer> currentScores= new HashMap<>(scores);
+        Map<String, Integer> currentScoresArchive= new HashMap<>(scoresArchive);
         if(isRestoredSnapshot()) {
             System.out.println("Redoing the last action");
-            currentState = new GolfClubSnapshot(scores, scoresArchive);
+            restoredSnapshot = false;
         }
         else {
             System.out.println("Undoing the last action");
-            currentState = new GolfClubSnapshot(scores, scoresArchive, true);
+            restoredSnapshot = true;
         }
-        scores = lastState.getScores();
-        scoresArchive = lastState.getScoresArchive();
-        lastState = currentState;
+        scores= new HashMap<>(lastScores);
+        scoresArchive= new HashMap<>(lastScoresArchive);
+        lastScores= new HashMap<>(currentScores);
+        lastScoresArchive= new HashMap<>(currentScoresArchive);
+
+//        scores = lastState.getScores();
+//        scoresArchive = lastState.getScoresArchive();
+//        lastState = currentState;
     }
 
-    // Setter for Score HashMap
+    /**
+     * Setter for scores
+     * @param name - Name of the Player
+     * @param score - Player's Score
+     */
     private static void setScores(String name, int score) {
-        lastState = snapshotCurrentState();
+        snapshotCurrentState();
         scores.put(name, score);
     }
 
+    /**
+     * Enter multiple number of players to scores
+     * @param newScores - Scores as HashMap
+     */
     private static void setMultipleScores(Map<String, Integer> newScores) {
-        lastState = snapshotCurrentState();
+        snapshotCurrentState();
         scores.putAll(newScores);
     }
 
-    // Getter for Score HashMap
+    /**
+     * Getter for Score scoresArchive
+     * @param name - name of the player
+     * @return - score of the given player
+     */
     private static Integer getScores(String name) {
         return scores.get(name);
     }
 
+    /**
+     * check if the player exists in the Scores
+     * @param name - name of the player
+     * @return - weather player is the Scores
+     */
     private static boolean checkGolfer(String name) {
         return scores.containsKey(name);
     }
 
-    // Setter for Score HashMap
+    /**
+     * Setter for Score scoresArchive
+     * @param name - Name of the Player
+     * @param score - Score of the Player
+     */
     private static void setScoresArchive(String name, int score) {
-        lastState = snapshotCurrentState();
+        snapshotCurrentState();
         scoresArchive.put(name, score);
     }
 
-    // Getter for Score HashMap
+    /**
+     * Getter for Score scoresArchive
+     * @param name - Name of the Player
+     * @return - Score of the given player
+     */
     private static Integer getScoresArchive(String name) {
         return scoresArchive.get(name);
     }
 
+    /**
+     * check if the player exists in the scoresArchive
+     * @param name - name of the player
+     * @return - weather player is the scoresArchive
+     */
     private static boolean checkGolferArchive(String name) {
         return scoresArchive.containsKey(name);
     }
 
-    private static GolfClubSnapshot snapshotCurrentState(){
-        return new GolfClubSnapshot(scores, scoresArchive);
+    /**
+     * Take the Snapshot of current state and save it
+     */
+    private static void snapshotCurrentState(){
+        lastScores= new HashMap<>(scores);
+        lastScoresArchive= new HashMap<>(scoresArchive);
     }
 
+    /**
+     * Check if the last action is undo
+     * @return - last action is undo or not
+     */
     private static boolean isRestoredSnapshot(){
-        return lastState != null && lastState.isRestoredSnapshot();
+        return restoredSnapshot;
     }
+
+
+//    private static GolfClubSnapshot snapshotCurrentState(){
+//        return new GolfClubSnapshot(scores, scoresArchive);
+//    }
+
+//    private static boolean isRestoredSnapshot(){
+//        return lastState != null && lastState.isRestoredSnapshot();
+//    }
 }
