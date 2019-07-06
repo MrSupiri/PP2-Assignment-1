@@ -1,8 +1,12 @@
+// Name - Isala Piyarisi
+// IIT ID - 2018421
+// UOW ID - w1742118
+
 BEGIN
-SET scores;
-SET scoresArchive;
-SET lastScores;
-SET lastScoresArchive;
+SET scores as empty HashMap;
+SET scoresArchive as empty HashMap;
+SET lastScores as empty HashMap;
+SET lastScoresArchive as empty HashMap;
 SET restoredSnapshot = false;
 SET option;
 OUTPUT Welcome to Springfield Golf Club.
@@ -41,13 +45,16 @@ REPEAT
             restoreLastState();
             break;
 
+        case 7:
+            break;
+
         default:
             OUTPUT ERROR 406: Invalid Input
             showMenu();
     }
 
 UNTIL option != 7
-
+END
 
 
 

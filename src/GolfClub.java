@@ -13,7 +13,6 @@ public class GolfClub {
     private static Map<String, Integer> lastScoresArchive = new HashMap<>();
     private static boolean restoredSnapshot = false;
     private static Scanner sc = new Scanner(System.in);
-//    private static GolfClubSnapshot lastState;
 
     public static void main(String[] args) {
         System.out.println("Welcome to Springfield Golf Club.");
@@ -60,8 +59,7 @@ public class GolfClub {
                     break;
 
                 case 7:
-                    // Exit Code 0 means program existed intentionally
-//                    System.exit(0);
+                    // Exit will be handle by the while loop
                     break;
 
                 // Entered Value didn't match with any of the outputs
@@ -226,9 +224,6 @@ public class GolfClub {
         lastScores= new HashMap<>(currentScores);
         lastScoresArchive= new HashMap<>(currentScoresArchive);
 
-//        scores = lastState.getScores();
-//        scoresArchive = lastState.getScoresArchive();
-//        lastState = currentState;
     }
 
     /**
@@ -312,12 +307,4 @@ public class GolfClub {
         return restoredSnapshot;
     }
 
-
-//    private static GolfClubSnapshot snapshotCurrentState(){
-//        return new GolfClubSnapshot(scores, scoresArchive);
-//    }
-
-//    private static boolean isRestoredSnapshot(){
-//        return lastState != null && lastState.isRestoredSnapshot();
-//    }
 }
