@@ -41,15 +41,12 @@ REPEAT
             restoreLastState();
             break;
 
-        case 7:
-            QUIT THE PROGRAM
-
         default:
             OUTPUT ERROR 406: Invalid Input
             showMenu();
     }
 
-UNTIL option >= 1 && option <= 7
+UNTIL option != 7
 
 
 

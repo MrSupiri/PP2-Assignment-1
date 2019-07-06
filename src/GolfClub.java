@@ -61,7 +61,7 @@ public class GolfClub {
 
                 case 7:
                     // Exit Code 0 means program existed intentionally
-                    System.exit(0);
+//                    System.exit(0);
                     break;
 
                 // Entered Value didn't match with any of the outputs
@@ -70,7 +70,7 @@ public class GolfClub {
                     showMenu();
             }
 
-        } while (option >= 1 && option <= 7);
+        } while (option != 7);
     }
 
     // First rule of programming - Don't repeat yourself
