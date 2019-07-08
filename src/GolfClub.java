@@ -112,7 +112,7 @@ public class GolfClub {
 
             int score = getScoreFromUser();
 
-            if(scores.containsKey(name)){
+            if(scores.containsKey(name) || newScores.containsKey(name)){
                 System.out.println(name + " is already existing in the data structure");
                 System.out.println("Are you want to override the data (Y/n) ?\nEnter 'n' if you don't want to override the data");
                 if(sc.next().charAt(0) == 'n'){

@@ -11,191 +11,213 @@ SET restoredSnapshot = false;
 SET option;
 OUTPUT Welcome to Springfield Golf Club.
 REPEAT
-    showMenu();
+    showMenu()
     INPUT option
+
     OUTPUT >
+
     WHILE option is not integer:
         OUTPUT ERROR 406: Invalid Input \nSelect *Only* one of these Option:
         showMenu();
         OUTPUT >
         INPUT option
+    ENDWHILE
 
-    SWITCH(OPTION){
+    SWITCH (OPTION)
         case 1:
-            enterScore();
-            break;
+            enterScore()
+            break
 
         case 2:
-            findGolfer();
-            break;
+            findGolfer()
+            break
 
         case 3:
-            displayScoreboard();
-            break;
+            displayScoreboard()
+            break
 
         case 4:
-            removeGolfer();
-            break;
+            removeGolfer()
+            break
 
         case 5:
-            restoreGolfer();
-            break;
+            restoreGolfer()
+            break
 
         case 6:
-            restoreLastState();
-            break;
+            restoreLastState()
+            break
 
         case 7:
-            break;
+            break
 
         default:
             OUTPUT ERROR 406: Invalid Input
-            showMenu();
-    }
+            showMenu()
+    ENDSWITCH
 
 UNTIL option != 7
-END
 
-
-
-FUNCTION showMenu(){
+FUNCTION showMenu()
         OUTPUT Select one of these Option:
         OUTPUT 1) Enter Scores
         OUTPUT 2) Find Golfer
         OUTPUT 3) Display Scoreboard
         OUTPUT 4) Remove Golfer
         OUTPUT 5) Restore a removed golfer
-        if(isRestoredSnapshot()){
+        IF isRestoredSnapshot()
             OUTPUT 6) Redo last action
-        }
-        else{
+        ELSE
             OUTPUT 6) Undo last action
-        }
+        ENDIF
         OUTPUT 7) Exit Program
-}
+ENDFUNCTION
 
-FUNCTION enterScore(){
+FUNCTION enterScore()
+
     SET newScores;
     OUTPUT How many golfers in the group:
     INPUT n_golfers
+
     WHILE n_golfers is not integer:
         OUTPUT ERROR 406: Invalid Input
         OUTPUT How many golfers in the group:
         INPUT n_golfers
-    FOR i IN i FROM n_golfers:
+    ENDWHILE
+
+    SET i = 0;
+
+    WHILE i < n_golfers
         OUTPUT GOLFER {i}
         OUTPUT Name:
-        INPUT name
-}
+        score = getScoreFromUser()
 
-FUNCTION getScoreFromUser(){
+        IF name IN scores OR name IN newScores
+            OUTPUT {name} is already existing in the data structure
+            OUTPUT Are you want to override the data (Y/n) ? Enter 'n' if you don't want to override the data
+            INPUT text
+            IF text == 'n'
+                continue
+            ENDIF
+        ENDIF
+        INSERT name AND score to newScores MAP
+        SET i = i + 1
+    ENDWHILE
+
+    setMultipleScores(newScores)
+ENDFUNCTION
+
+FUNCTION getScoreFromUser()
     OUTPUT Result:
     INPUT score
-    WHILE score is not integer:
+
+    WHILE score is not integer
         OUTPUT ERROR 400: Invalid Result,	Make sure your result is between 18 and 108, Enter Again !
         OUTPUT Result:
         INPUT score
-    IF score < 18 || score > 108:
+    ENDWHILE
+
+    IF score < 18 OR score > 108
         OUTPUT ERROR 400: Invalid Result,	Make sure your result is between 18 and 108, Enter Again !
         score = getScoreFromUser();
-    return score
-}
+    ENDIF
 
-FUNCTION findGolfer(){
+    return score
+ENDFUNCTION
+
+FUNCTION findGolfer()
     OUTPUT Name:
     INPUT name
-    IF (checkGolfer(name)) {
-        OUTPUT {name} {getScores(name))};
-    }
-    ELSE{
-        OUTPUT ERROR 404: Player not found"
-    }
-}
 
-FUNCTION removeGolfer() {
+    IF checkGolfer(name)
+        OUTPUT {name} {getScores(name))};
+    ELSE
+        OUTPUT ERROR 404: Player not found"
+    ENDIF
+ENDFUNCTION
+
+FUNCTION removeGolfer()
      OUTPUT Name:
      INPUT name
-     IF (checkGolfer(name)) {
+     IF checkGolfer(name)
          setScoresArchive(name, getScores(name));
          ADD name TO Scores
          OUTPUT {name} was removed from the data structure
-     }
-     ELSE {
+     ELSE
          OUTPUT ERROR 404: Player not found
-     }
-}
+     ENDIF
+ENDFUNCTION
 
-FUNCTION restoreGolfer(){
+FUNCTION restoreGolfer()
     OUTPUT Name:
     INPUT name
-    IF (checkGolferArchive(name)) {
+
+    IF checkGolferArchive(name)
         setScores(name, getScoresArchive(name));
         ADD name TO scoresArchive
         OUTPUT {name} was restored to the data structure
-    } ELSE {
+    ELSE
         OUTPUT ERROR 404: Player not found
-    }
-}
+    ENDIF
+ENDFUNCTION
 
-FUNCTION displayScoreboard(){
+FUNCTION displayScoreboard()
     SORT scores
     FOR score in scores:
         OUTPUT {score.key} {score.value}
-}
+ENDFUNCTION
 
-FUNCTION restoreLastState(){
+FUNCTION restoreLastState()
     SET currentScores = scores
     SET currentScoresArchive = scoresArchive
-    if(isRestoredSnapshot()) {
+    IF isRestoredSnapshot()
         OUTPUT Redoing the last action
         SET restoredSnapshot = false;
-    }
-    else {
+    ELSE
         OUTPUT Undoing the last action
         SET restoredSnapshot = true;
-    }
+    ENDIF
     scores = lastScores
     scoresArchive = lastScoresArchive
     lastScores = currentScores
     lastScoresArchive = currentScoresArchive
-}
+ENDFUNCTION
 
-FUNCTION setScores(name, score){
+FUNCTION setScores(name, score)
     snapshotCurrentState();
     ADD score AND name TO scores MAP
-}
+ENDFUNCTION
 
-FUNCTION setMultipleScores(newScores){
+FUNCTION setMultipleScores(newScores)
     snapshotCurrentState();
     CONCATENATE newScores AND score
-}
+ENDFUNCTION
 
-FUNCTION getScores(name){
+FUNCTION getScores(name)
     RETURN GET score FROM scores MAP WHERE name IS EQUAL TO KEY
-}
+ENDFUNCTION
 
-FUNCTION checkGolfer(name){
+FUNCTION checkGolfer(name)
     RETURN WEATHER name IN score MAP
-}
+ENDFUNCTION
 
-FUNCTION setScoresArchive(name, score){
+FUNCTION setScoresArchive(name, score)
     snapshotCurrentState();
     ADD scoresArchive AND name TO scores MAP
-}
+ENDFUNCTION
 
-FUNCTION getScoresArchive(name){
+FUNCTION getScoresArchive(name)
     RETURN GET scoresArchive FROM scores MAP WHERE name IS EQUAL TO KEY
-}
-
-FUNCTION checkGolferArchive(name){
+ENDFUNCTION
+FUNCTION checkGolferArchive(name)
     RETURN WEATHER name IN scoresArchive MAP
-}
+ENDFUNCTION
 
-FUNCTION snapshotCurrentState(){
+FUNCTION snapshotCurrentState()
     lastScores = scores
     lastScoresArchive = scoresArchive
-}
+ENDFUNCTION
 
-FUNCTION isRestoredSnapshot(){
+FUNCTION isRestoredSnapshot()
     return restoredSnapshot IS TRUE OR FALSE;
-}
+ENDFUNCTION
